@@ -2,6 +2,25 @@ from cvxopt import solvers, matrix, spmatrix, sparse, msk, blas, lapack, normal,
 from math import sqrt
 import numpy as np
 
+class SemidefCluster:
+    assign_labels = None
+    labels_ = None
+    def __init__(self,assign_labels='truncated'):
+        self.assign_labels = assign_labels
+
+    def fit(self,A,Z=None):
+        if Z == None:
+            Z = balanced_cut(A, delta = 1.0, cut = 'min', solver = 'mosek')
+        if self.assign_labels == 'truncated':
+            Vr,wr = evd(Z, scaled=True)
+            self.labels_ = np.array([0 if vi >= 0.0 else 1 for vi in list(Vr[:,0])])
+        elif self.assign_labels == 'sampling':
+            Vr,wr = evd(Z, scaled=True)
+            self.labels_ = sampler(A,Vr)
+        elif self.assign_labels == 'kmeans':
+            Vr,wr = evd(Z, scaled=True)
+            inl, self.labels_,c = cluster.k_means(np.array(Vr),2)
+            
 def custom_kkt(W):
     """
     Custom KKT solver for the following conic LP
