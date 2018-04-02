@@ -1,25 +1,29 @@
 from cvxopt import solvers, matrix, spmatrix, sparse, msk, blas, lapack, normal, amd, mul, misc
 from math import sqrt
 import numpy as np
+from sklearn.cluster import k_means
 
 class SemidefCluster:
     assign_labels = None
     labels_ = None
+    Z = None
     def __init__(self,assign_labels='truncated'):
         self.assign_labels = assign_labels
 
     def fit(self,A,Z=None):
-        if Z == None:
-            Z = balanced_cut(A, delta = 1.0, cut = 'min', solver = 'mosek')
+        if type(Z) == type(None):
+            self.Z = balanced_cut(A, delta = 1.0, cut = 'min', solver = 'mosek')
+        else:
+            self.Z = Z
         if self.assign_labels == 'truncated':
-            Vr,wr = evd(Z, scaled=True)
+            Vr,wr = evd(self.Z, scaled=True)
             self.labels_ = np.array([0 if vi >= 0.0 else 1 for vi in list(Vr[:,0])])
         elif self.assign_labels == 'sampling':
-            Vr,wr = evd(Z, scaled=True)
+            Vr,wr = evd(self.Z, scaled=True)
             self.labels_ = sampler(A,Vr)
         elif self.assign_labels == 'kmeans':
-            Vr,wr = evd(Z, scaled=True)
-            inl, self.labels_,c = cluster.k_means(np.array(Vr),2)
+            Vr,wr = evd(self.Z, scaled=True)
+            inl, self.labels_,c = k_means(np.array(Vr),2)
             
 def custom_kkt(W):
     """
@@ -33,7 +37,6 @@ def custom_kkt(W):
             sum(X) + x = const
             x >= 0, X psd
     """
-    
     r = W['rti'][0]
     N = r.size[0]
     e = matrix(1.0,(N,1))
@@ -144,14 +147,18 @@ def evd(Z, tol=1e-5, maxr=None, scaled=False):
 
 def sampler(A,Vr):
     # Generate 1000 samples and apply rounding
-    Am = matrix(A.toarray())
+    A = A.toarray()
+    #A[A==0.] = -1
+    Am = matrix(A)
     vals = []
     fbest = float('-inf')
     xbest = None
-    for k in range(1000):
+    for k in range(10000):
         x = matrix([-1. if xi >=0 else 1. for xi in Vr*normal(Vr.size[1],1)])
         f = blas.dot(x,Am*x)
         if f > fbest:
+            print f
+            print "without"
             fbest = f
             xbest = x
         vals.append(f)

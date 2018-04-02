@@ -25,6 +25,7 @@ def main():
                ('semidefKmeans',semidef_kmeans),
                ('semidefSampler',semidef_sampler)]
     noise = [0.15, 0.2, 0.25, 0.30]
+    noise = [0.07, 0.10, 0.15]
     data = []
     all_experiments = []
     plot_num=1
@@ -34,7 +35,7 @@ def main():
         experiments = []
         distances = np.linspace(0.05,0.5,15)
         #X,Y = datasets.make_moons(n_samples, noise = sig)
-        X,Y = datasets.make_circles(n_samples, noise = sig)
+        X,Y = datasets.make_circles(n_samples, factor=.5,noise = sig)
         data.append((X,Y))
         results = {'method':'Original','error':0,'std':0,'labels':Y,'distance':0}
         experiments.append(results)
@@ -67,16 +68,17 @@ def main():
             results['labels'] = best['labels']
             results['distance'] = best['distance']
             experiments.append(results)
-            all_experiments.append(experiments)
+        all_experiments.append(experiments)
 
     import IPython
     IPython.embed()
     #Plotting
+    plot_num = 1
     for i in range(len(all_experiments)):
         X = data[i][0]
         Y = data[i][1]
         for j,exp in enumerate(all_experiments[i]):
-            plt.subplot(len(noise),len(methods),plot_num)
+            plt.subplot(len(noise),len(methods)+1,plot_num)
             for k in range(K):
                 plt.plot(X[exp['labels']==k,0], X[exp['labels']==k,1], marker='.', color="C"+str(k), lw=0)
                 if i == 0:
