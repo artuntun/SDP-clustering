@@ -1,6 +1,7 @@
 import numpy as np
 import networkx as nx
 from utils import bernoulli_sampler
+from scipy.linalg import expm
 
 #TO DO:
     #extend for Ndimenional data
@@ -55,7 +56,11 @@ def sample_SBM(n_nodes,p=0.5,q=0.05,bal=0.5):
             else:
                 if bernoulli_sampler(q)==1:
                     net.add_edge(i,j)
-    return net,labels
+    A = np.array(nx.to_numpy_matrix(net,dtype=np.float64))
+    node_color=[d['attr_dict']['class'] for x,d in net.nodes(data=True)]
+    if 0 in expm(A): #not a fully connected graph
+        A, labels, net, node_color = sample_SBM(n_nodes,p,q,bal)
+    return A,labels,net,node_color
 
 def sample_random_graph(N,p=0.5):
     """Generate Adjacency of a random graph
