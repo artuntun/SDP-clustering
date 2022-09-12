@@ -3,7 +3,10 @@ from setuptools import setup, find_packages
 
 long_description = None
 INSTALL_REQUIRES = [
-    'cvxpy==1.2.1'
+    'cvxpy==1.2.1',
+    'scipy==1.9.1',
+    'numpy==1.23.3'
+    'cvxopt'
 ]
 EXTRAS_REQUIRE = {
     'local': [
