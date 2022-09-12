@@ -145,7 +145,7 @@ def evd(Z, tol=1e-5, maxr=None, scaled=False):
     wr = matrix([w[i] for i in range(N-1,N-1-maxr,-1) if w[i] >= tol*w[-1]])
     return Vr,wr
 
-def sampler(A,Vr, verbose=False):
+def sampler(A,Vr):
     # Generate 1000 samples and apply rounding
     A = A.toarray()
     A[A==0.] = -1
@@ -157,9 +157,6 @@ def sampler(A,Vr, verbose=False):
         x = matrix([-1. if xi >=0 else 1. for xi in Vr*normal(Vr.size[1],1)])
         f = blas.dot(x,Am*x)
         if f > fbest:
-            if verbose == True:
-                print f
-                print "with"
             fbest = f
             xbest = x
         vals.append(f)
