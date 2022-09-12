@@ -1,45 +1,13 @@
 import numpy as np
 import networkx as nx
-from solvers import evd, sampler
 
 
 def get_karate_dataset(path):
     G = nx.read_gml(path, label="id")
     y_true = [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        1,
-        0,
-        0,
-        1,
-        0,
-        1,
-        0,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
+        0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0,
+        0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1
     ]
     for i, (n, d) in enumerate(G.nodes(data=True)):
         if y_true[i] == 0:

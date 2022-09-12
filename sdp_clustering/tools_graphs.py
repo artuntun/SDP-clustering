@@ -3,6 +3,7 @@ import networkx as nx
 from utils import bernoulli_sampler
 from scipy.linalg import expm
 
+
 # TO DO:
 # extend for Ndimenional data
 # make it sensitive to 1D data

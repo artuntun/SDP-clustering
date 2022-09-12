@@ -7,7 +7,6 @@ from cvxopt import (
     blas,
     lapack,
     normal,
-    amd,
     mul,
     misc,
 )
@@ -25,7 +24,7 @@ class SemidefCluster:
         self.assign_labels = assign_labels
 
     def fit(self, A, Z=None):
-        if type(Z) == type(None):
+        if Z is None:
             self.Z = balanced_cut(A, delta=1.0, cut="min", solver="mosek")
         else:
             self.Z = Z
@@ -88,7 +87,7 @@ def custom_kkt(W):
 
         # Compute bz := -W^{-T}*(bz-G*ux)
         # z -= G*x
-        z[1 :: N + 1] -= x[:-1]
+        z[1:: N + 1] -= x[:-1]
         z -= x[-1]
         # Apply scaling
         z[0] *= -W["di"][0]

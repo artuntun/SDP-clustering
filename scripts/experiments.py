@@ -1,7 +1,9 @@
-import matplotlib, matplotlib.pyplot as plt
-import sklearn, numpy as np
-from sklearn import datasets, neighbors, cluster
-from solvers import SemidefCluster
+import matplotlib.pyplot as plt
+import sklearn
+import numpy as np
+from sklearn import datasets, cluster
+
+from sdp_clustering.solvers import SemidefCluster
 
 # TO DO:
 # chagne get error function. VEctorize
@@ -91,9 +93,6 @@ def main():
             experiments.append(results)
         all_experiments.append(experiments)
 
-    import IPython
-
-    IPython.embed()
     # Plotting
     plot_num = 1
     for i in range(len(all_experiments)):

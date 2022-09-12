@@ -1,14 +1,9 @@
-# Preamble  here, add paths and import relevant modules
-import os
-import sys
 import numpy as np
 import sklearn
-from sklearn import datasets
-from scipy.sparse.linalg import eigsh
-from numpy.random import permutation
 import matplotlib.pyplot as plt
-import tools_graphs as gr
 import cvxpy as cvx
+
+import sdp_clustering.tools_graphs as gr
 
 
 class experiment:
@@ -55,6 +50,3 @@ constraints = [X[i, i] == 1 for i in range(m)] + [cvx.sum_entries(X) <= 1]
 
 prob = cvx.Problem(objective, constraints)
 result = prob.solve(solver="SCS")
-import IPython
-
-IPython.embed()

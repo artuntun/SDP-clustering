@@ -1,12 +1,7 @@
 import numpy as np
 import networkx as nx
-import matplotlib.pyplot as plt
-import sys
 
-sys.path.insert(0, "../")
-import solvers as sv
-import scipy as sp
-import copy
+import sdp_clustering.solvers as sv
 
 
 def bernoulli_sampler(p, n=1):
